@@ -10,8 +10,8 @@ int main() {
     tpMovimientosValidos movimientosValidos;
     tpListaMovimientos solucionParcial;
 
-    int tableroOk = inicializarTablero("test/tableros/tableroDos.txt", tablero);
-    int movimientosOk = inicializarMovimientosValidos("test/movimientos/movimientosClasicos.txt", movimientosValidos);
+    int tableroOk = inicializarTablero("test/tableros/tableroTres.txt", tablero);
+    int movimientosOk = inicializarMovimientosValidos("test/movimientos/movimientosCompletos.txt", movimientosValidos);
 
     if(tableroOk && movimientosOk) {
         buscaSolucion(tablero, movimientosValidos, solucionParcial, 1000);

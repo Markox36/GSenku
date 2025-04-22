@@ -115,11 +115,11 @@ tpPosicion obtenerMovimientoValido(const tpTablero &tablero, const tpMovimientos
 bool hayMovimientosValidos(const tpTablero &tablero, const tpMovimientosValidos &movValidos) {
     for(int i = 0; i < tablero.nfils; i++) {
         for(int j = 0; j < tablero.ncols; j++) {
-            cout << "Comprobando celda: " << i << ", " << j << " tablero: " << tablero.matriz[i][j] << endl;
+            // cout << "Comprobando celda: " << i << ", " << j << endl;
             if(tablero.matriz[i][j] == OCUPADA) {
                 for(int direccion = 0; direccion < 8; direccion++) {
                     tpPosicion movimientoValido = obtenerMovimientoValido(tablero, movValidos, i, j, direccion);
-                    cout << "Direccion: " << direccion << " Movimiento valido: " << movimientoValido.x << ", " << movimientoValido.y << endl;
+                    // cout << "Direccion: " << direccion << " Movimiento valido: " << movimientoValido.x << ", " << movimientoValido.y << endl;
                     if(movimientoValido.x != 0 || movimientoValido.y != 0) return true;
                 }
             }
@@ -144,6 +144,12 @@ int contarFichas(tpTablero &tablero) {
 }
 
 void moverFicha(tpTablero &tablero, const tpMovimientoPieza &mov) {
+
+    if(100 > 0) {
+        mostrarTablero(tablero);
+        this_thread::sleep_for(chrono::milliseconds(100));
+    }
+
     tablero.matriz[mov.origen.y][mov.origen.x] = VACIA;
     tablero.matriz[mov.destino.y][mov.destino.x] = OCUPADA;
     tablero.matriz[(mov.origen.y + mov.destino.y) / 2][(mov.origen.x + mov.destino.x) / 2] = VACIA; // Hallamos la ficha del medio ya sea el movimiento en el eje X o en el eje Y
@@ -166,10 +172,6 @@ int buscaSolucion(tpTablero &tablero, const tpMovimientosValidos &movValidos, tp
 
             if(tablero.matriz[i][j] == OCUPADA) {
 
-                if(retardo > 0) {
-                    mostrarTablero(tablero);
-                    this_thread::sleep_for(chrono::milliseconds(retardo));
-                }
 
                 for(int direccion = 0; direccion < 8; direccion++) {
 
@@ -177,15 +179,18 @@ int buscaSolucion(tpTablero &tablero, const tpMovimientosValidos &movValidos, tp
 
                     if(movimientoValido.x == 0 && movimientoValido.y == 0) continue;  // Si no hay movimiento valido, continuamos
 
-                    tpMovimientoPieza mov = { {i, j}, {i + movimientoValido.x, j + movimientoValido.y} };
+                    // j columnas, i filas
+                    // x, y
+                    tpMovimientoPieza mov = { {j, i}, {j + movimientoValido.x, i + movimientoValido.y} };
                     moverFicha(tablero, mov);
-                    solucionParcial.movs[solucionParcial.numMovs++] = mov;
+                    solucionParcial.movs[solucionParcial.numMovs++] = { { mov.origen.y, mov.origen.x }, { mov.destino.y, mov.destino.x } }; // Guardamos el movimiento en la solucion parcial
 
 
                     if(buscaSolucion(tablero, movValidos, solucionParcial, retardo)) return 1;
                     deshacerMovimiento(tablero, mov);
                     solucionParcial.numMovs--;
                 }
+
             }
         }
     }
