@@ -1,3 +1,8 @@
+// ***************************************************************************** //
+// *** Apellidos: Alejaldre, Martín  Nombre: Héctor NIP: 898447              *** //
+// *** Apellidos: Abad, García       Nombre: Marcos NIP: 929134              *** //
+// ***************************************************************************** //
+
 #include "GSenku.hpp"
 #include <thread>
 #include <chrono>
@@ -32,9 +37,7 @@ bool inicializarTablero(const string nombreFichero, tpTablero &tablero) {
             default:
                 break;
             }
-            cout << tablero.matriz[i][j] << " ";
         }
-        cout << endl;
     }
 
     f.close();
@@ -71,13 +74,16 @@ void mostrarTablero(const tpTablero & tablero) {
         for(int j = 0; j < tablero.ncols; ++j) {
             switch(tablero.matriz[i][j]) {
             case NO_USADA:
-                cout << " - ";
+                // Si es una celda no usada, la mostramos en negro
+                cout << "   " << "\033[0m";
                 break;
             case OCUPADA:
-                cout << " o ";
+                // Si es una celda ocupada, la mostramos en azul
+                cout << "\033[1;42m" << " o " << "\033[0m";
                 break;
             case VACIA:
-                cout << " x ";
+                // Si es una celda vacia, la mostramos en blanco
+                cout << "\033[8;30m" << "   " << "\033[0m";
                 break;
             }
         }
@@ -144,12 +150,6 @@ int contarFichas(tpTablero &tablero) {
 }
 
 void moverFicha(tpTablero &tablero, const tpMovimientoPieza &mov) {
-
-    if(100 > 0) {
-        mostrarTablero(tablero);
-        this_thread::sleep_for(chrono::milliseconds(100));
-    }
-
     tablero.matriz[mov.origen.y][mov.origen.x] = VACIA;
     tablero.matriz[mov.destino.y][mov.destino.x] = OCUPADA;
     tablero.matriz[(mov.origen.y + mov.destino.y) / 2][(mov.origen.x + mov.destino.x) / 2] = VACIA; // Hallamos la ficha del medio ya sea el movimiento en el eje X o en el eje Y
@@ -182,7 +182,14 @@ int buscaSolucion(tpTablero &tablero, const tpMovimientosValidos &movValidos, tp
                     // j columnas, i filas
                     // x, y
                     tpMovimientoPieza mov = { {j, i}, {j + movimientoValido.x, i + movimientoValido.y} };
+
                     moverFicha(tablero, mov);
+
+                    if(retardo > 0) {
+                        mostrarTablero(tablero);
+                        this_thread::sleep_for(chrono::milliseconds(retardo));
+                    }
+
                     solucionParcial.movs[solucionParcial.numMovs++] = { { mov.origen.y, mov.origen.x }, { mov.destino.y, mov.destino.x } }; // Guardamos el movimiento en la solucion parcial
 
 

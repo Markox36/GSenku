@@ -1,69 +1,76 @@
+// ***************************************************************************** //
+// *** Apellidos: Alejaldre, Martín  Nombre: Héctor NIP: 898447              *** //
+// *** Apellidos: Abad, García       Nombre: Marcos NIP: 929134              *** //
+// ***************************************************************************** //
+
+
+
 #include <iostream>
-#include <fstream> 
+#include <fstream>
 
 using namespace std;
 
 // CONSTANTES Y TIPOS
 
 enum tpEstadoCelda {
-    NO_USADA, 
-    VACIA, 
+    NO_USADA,
+    VACIA,
     OCUPADA
-}; 
+};
 
 enum tpDireccion {
-    superiorIzquierda=0, 
-    superior, 
-    superiorDerecha, 
-    izquierda, 
-    derecha, 
-    inferiorIzquierda, 
-    inferior, 
+    superiorIzquierda = 0,
+    superior,
+    superiorDerecha,
+    izquierda,
+    derecha,
+    inferiorIzquierda,
+    inferior,
     inferiorDerecha
-}; 
+};
 
 // Máximo múmero de filas y columnas del tablero
 const int MAXDIM = 25;
 
 // Tipo tablero
-struct tpTablero{
+struct tpTablero {
     int nfils; // Número de filas del tablero
     int ncols; // Número de columnas del tablero
-    tpEstadoCelda matriz[MAXDIM][MAXDIM];   // Una celda puede estar vacia, ocupada o no formar parte 
-                                            // del tablero
-                                            // Las coordenadas de la casilla de arriba a la izquierda son (0,0)
+    tpEstadoCelda matriz[MAXDIM][MAXDIM];   // Una celda puede estar vacia, ocupada o no formar parte
+    // del tablero
+    // Las coordenadas de la casilla de arriba a la izquierda son (0,0)
 };
 
 // Tipo posición
 struct tpPosicion {     // una posición dentro del tablero
-    int x; 
-    int y; 
+    int x;
+    int y;
 };
 
-// Tipo movimientoPieza 
+// Tipo movimientoPieza
 struct tpMovimientoPieza {   // especificamos un movimiento con la celda origen y la celda destino del mismo
-    tpPosicion origen; 
-    tpPosicion destino; 
+    tpPosicion origen;
+    tpPosicion destino;
 };
 
 // Tipo tpListaPosiciones
 struct tpListaPosiciones {
-    tpPosicion posiciones[MAXDIM*MAXDIM]; 
-    int numPos = 0; 
-}; 
+    tpPosicion posiciones[MAXDIM * MAXDIM];
+    int numPos = 0;
+};
 
-// Tipo tpListaMovimientos 
-// Nota: esta lista es para los movimientos de la solución 
+// Tipo tpListaMovimientos
+// Nota: esta lista es para los movimientos de la solución
 //      (dependiendo de cómo abordéis el diseño, puede ser necesaria una lista de mayor tamaño)
 struct tpListaMovimientos {
-    tpMovimientoPieza movs[MAXDIM*MAXDIM]; // como cada movimiento elimina una pieza, el número de movimientos de la solución está acotado
-    int numMovs = 0; 
+    tpMovimientoPieza movs[MAXDIM * MAXDIM]; // como cada movimiento elimina una pieza, el número de movimientos de la solución está acotado
+    int numMovs = 0;
 };
 
 // Tipo tpMovimientosValidos
 struct tpMovimientosValidos {
     // cada valor de tpDireccion se corresponderá con una posición de este vector
-    bool validos[8]; 
+    bool validos[8];
 };
 
 
@@ -78,15 +85,15 @@ const int CIAN     = 46;
 const int BLANCO   = 47;
 
 
-// FUNCIONES / PROCEDIMIENTOS 
+// FUNCIONES / PROCEDIMIENTOS
 
 // Pre: true
 // Post: lee la configuración y el estado del tablero del fichero de configuración que se le pasa como argumento
 //      inicializando tablero y devolviendo true si todo ha ido bien y false si ha habido algún error
 bool inicializarTablero(const string nombreFichero, tpTablero &tablero);
 
-// Pre: true 
-// Post: lee los movimientos válidos del fichero que se le pasa como argumento 
+// Pre: true
+// Post: lee los movimientos válidos del fichero que se le pasa como argumento
 //      inicializando la estructura y devolviendo true si todo ha ido bien y false si ha habido algún error
 bool inicializarMovimientosValidos(const string nombreFichero, tpMovimientosValidos &movimientos);
 
@@ -94,25 +101,50 @@ bool inicializarMovimientosValidos(const string nombreFichero, tpMovimientosVali
 // Post: Se ha mostrado el tablero por pantalla
 void mostrarTablero(const tpTablero & tablero);
 
-// Pre: tablero contiene el estado inicial del que se parte para la búsqueda, 
-//      movimientosValidos contiene los movimientos que están permitidos, 
+// Pre: tablero contiene el estado inicial del que se parte para la búsqueda,
+//      movimientosValidos contiene los movimientos que están permitidos,
 //      solucionParcial contiene la solución actual como lista de movimientos, En el tablero se han colocada las n primeras piezas de vEntrada, en la columnas indicadas respectivamente en vSalida
 // Post: solucionParcial contendrá la lista de movimientos completa (si no se llega a una solución, estará vacía, numMovs == 0)
 //       Devuelve 1 si encuentra solución, -1 si no la encuentra.
-int buscaSolucion(tpTablero &tablero, const tpMovimientosValidos &movValidos, tpListaMovimientos &solucionParcial, const int retardo=0);
+int buscaSolucion(tpTablero &tablero, const tpMovimientosValidos &movValidos, tpListaMovimientos &solucionParcial, const int retardo = 0);
 
 
-// Pre: listaMovimientos contiene la lista de movimientos con la solucion 
-// Post: escribe la lista de movimientos en el fichero que se le pasa como argumento siguiendo el 
+// Pre: listaMovimientos contiene la lista de movimientos con la solucion
+// Post: escribe la lista de movimientos en el fichero que se le pasa como argumento siguiendo el
 //      formato especificado en el guión (si está vacía, se escribe un -1 en el fichero)
-void escribeListaMovimientos (string nombreFichero, const tpListaMovimientos &solucion); 
+void escribeListaMovimientos(string nombreFichero, const tpListaMovimientos &solucion);
+
+
+// Pre: tablero contiene el estado inicial del que se parte para la búsqueda,
+//      movimientosValidos contiene los movimientos que están permitidos,
+//      i, j y direccion son los paramatros que utilizamos para distingir desde donde parte y hacia donde se dirige la pieza
+// Post: devuelve la diferencia de posicion que movera la ficha despues de la iteracion
+tpPosicion obtenerMovimientoValido(const tpTablero &tablero, const tpMovimientosValidos &movValidos, int i, int j, int direccion);
+
+// Pre: tablero contiene el estado inicial del que se parte para la búsqueda,
+//      movimientosValidos contiene los movimientos que están permitidos
+// Post: devuelve true si encuentra un movimiento valido de alguna celda, pasando por todas en orden de fila columna.
+bool hayMovimientosValidos(const tpTablero &tablero, const tpMovimientosValidos &movValidos);
+
+// Pre: tablero contiene el estado inicial del que se parte para el conteo de fichas en él
+// Post: devuelve el número de fichas ocupadas en el tablero
+int contarFichas(tpTablero &tablero);
+
+// Pre: tablero contiene el estado inicial del que se parte para la búsqueda,
+//      mov contiene el movimiento que se va a realizar
+// Post: modifica el tablero según el movimiento dado en mov
+void moverFicha(tpTablero &tablero, const tpMovimientoPieza &mov);
+
+// Pre: tablero contiene el estado inicial del que se parte para la búsqueda, mov contiene el movimiento que se va a deshacer
+// Post: modifica el tablero según el movimiento dado en mov, deshaciendo el movimiento realizado anteriormente
+void deshacerMovimiento(tpTablero &tablero, const tpMovimientoPieza &mov);
 
 //////////////////////////////////////////////////////////////////////////////
 // Salida con atributos
 //
 // La cadena "<ESC>[{attr1};...;{attrn}m" sirve para asignar atributos a la salida
 //
-// Por ejemplo: 
+// Por ejemplo:
 //    cout << "\033[34;42m" << "Hola" << "\033[0m";
 // escribe en azul con fondo verde, y después resetea los atributos
 

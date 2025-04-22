@@ -1,21 +1,37 @@
+// ***************************************************************************** //
+// *** Apellidos: Alejaldre, Martín  Nombre: Héctor NIP: 898447              *** //
+// *** Apellidos: Abad, García       Nombre: Marcos NIP: 929134              *** //
+// ***************************************************************************** //
+
 #include "GSenku.hpp"
 #include <iostream>
-#include <fstream>
 
 using namespace std;
 
-int main() {
+/*
+ *  Pre: argc representa el número de argumentos dados al ejecutar el programa y argv[] los argumentos de la línea de comandos:
+ *  <ruta_tablero> <ruta_movimiento> <retardo> [fichero_salida]
+ *  Post: Programa que busca la solución al juego de Senku obteniendo la lista de movimientos validos y el tablero inicial a partir
+ *  de los ficheros que se le pasan como argumentos.
+*/
+int main(int argc, char *argv[]) {
+    if(argc < 5) {
+        cout << "Error: Se necesitan argumentos ruta_tablero ruta_movimiento retardo [fichero_salida]" << endl;
+        return 1;
+    }
 
     tpTablero tablero;
     tpMovimientosValidos movimientosValidos;
     tpListaMovimientos solucionParcial;
 
-    int tableroOk = inicializarTablero("test/tableros/tableroTres.txt", tablero);
-    int movimientosOk = inicializarMovimientosValidos("test/movimientos/movimientosCompletos.txt", movimientosValidos);
+    int tableroOk = inicializarTablero(argv[1], tablero);
+    int movimientosOk = inicializarMovimientosValidos(argv[2], movimientosValidos);
 
     if(tableroOk && movimientosOk) {
-        buscaSolucion(tablero, movimientosValidos, solucionParcial, 1000);
-        escribeListaMovimientos("solucion.txt", solucionParcial);
+        mostrarTablero(tablero);
+        buscaSolucion(tablero, movimientosValidos, solucionParcial, stoi(argv[3]));
+
+        if(argc == 5) escribeListaMovimientos(argv[4], solucionParcial);
     }
 
 
