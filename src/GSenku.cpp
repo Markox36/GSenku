@@ -74,16 +74,16 @@ void mostrarTablero(const tpTablero & tablero) {
         for(int j = 0; j < tablero.ncols; ++j) {
             switch(tablero.matriz[i][j]) {
             case NO_USADA:
-                // Si es una celda no usada, la mostramos en negro
-                cout << "   " << "\033[0m";
+                // Si es una celda no usada
+                cout << "\033[37;40m" << "   " << "\033[0m";
                 break;
             case OCUPADA:
                 // Si es una celda ocupada, la mostramos en azul
                 cout << "\033[1;42m" << " o " << "\033[0m";
                 break;
             case VACIA:
-                // Si es una celda vacia, la mostramos en blanco
-                cout << "\033[8;30m" << "   " << "\033[0m";
+                // Si es una celda vacia
+                cout << "\033[8;45m" << "   " << "\033[0m";
                 break;
             }
         }
